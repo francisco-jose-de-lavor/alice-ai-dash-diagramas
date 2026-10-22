@@ -628,8 +628,40 @@ def linha_do_tempo():
     s.save("linha-do-tempo-do-teste")
 
 
+# --------------------------------------------------------------------------------------------
+# 11. Linha do tempo compacta, para a coluna da esquerda do topo do Resumo (15 de 24 colunas, 3 linhas)
+def linha_do_tempo_compacta():
+    import datetime as dt
+    W, H = 1000, 188
+    s = Svg(W, H, "Lembrete: os números já aparecem, mas cada leitura só vale quando amadurece. Datas estimadas: "
+                  "início em 21/10, primeira leitura por volta de 07/12, leitura principal por volta de 04/01 e custo "
+                  "e desfechos por volta de 08/03.")
+    s.text(8, 30, "Lembrete: os números já aparecem, mas cada leitura só vale quando amadurece", size=21, fill=INK, weight=700)
+    s.text(8, 58, "Datas estimadas de maturação da leitura", size=16, fill=MUTED)
+    ini, fim = dt.date(2026, 10, 21), dt.date(2027, 3, 8)
+    x0, x1, y = 22, 978, 104
+    X = lambda d: x0 + (d - ini).days / (fim - ini).days * (x1 - x0)
+    xp = X(dt.date(2027, 1, 4))
+    s.line(x0, y, xp, y, stroke="#E58BC0", sw=5)
+    s.line(xp, y, x1, y, stroke="#DDDDD5", sw=5)
+    marcos = [
+        (dt.date(2026, 10, 21), "21/10", "Início", DARK, 8, "start"),
+        (dt.date(2026, 12, 7), "~07/12", "Primeira leitura", MAGENTA, 8, "middle"),
+        (dt.date(2027, 1, 4), "~04/01", "Leitura principal", MAGENTA, 12, "middle"),
+        (dt.date(2027, 3, 8), "~08/03", "Custo e desfechos", BETERRABA, 8, "end"),
+    ]
+    for d, data, titulo, cor, r, ancora in marcos:
+        x = X(d)
+        s.circle(x, y, r, cor)
+        tx = x - (r if ancora == "start" else -r if ancora == "end" else 0)
+        s.text(tx, y + 40, data, size=19, fill=cor, weight=700, anchor=ancora)
+        s.text(tx, y + 66, titulo, size=17, fill=INK, weight=600, anchor=ancora)
+    s.save("linha-do-tempo-compacta")
+
+
 if __name__ == "__main__":
     for f in (acesso_e_grupos, comparacao_de_custo, anatomia_do_canal, leitura_do_incremento,
-              cobertura_da_resolucao, da_conversa_a_consulta, substituicao_de_ps, arvore_do_teste, linha_do_tempo):
+              cobertura_da_resolucao, da_conversa_a_consulta, substituicao_de_ps, arvore_do_teste, linha_do_tempo,
+              linha_do_tempo_compacta):
         f()
     print("ok:", sorted(p.name for p in OUT.glob("*.svg")))
