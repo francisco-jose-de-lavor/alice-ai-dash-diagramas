@@ -586,8 +586,50 @@ def arvore_do_teste():
     s.save("arvore-do-teste")
 
 
+# --------------------------------------------------------------------------------------------
+# 10. Lembrete e linha do tempo do teste de lançamento (Resumo)
+def linha_do_tempo():
+    import datetime as dt
+    W, H = 1200, 262
+    s = Svg(W, H, "Lembrete: os números do teste de lançamento já aparecem, mas cada leitura só vale quando amadurece. "
+                  "Linha do tempo com as datas estimadas de maturação: início em 21/10, 10 mil no tratamento por volta "
+                  "de 06/11, primeira leitura por volta de 07/12, leitura principal por volta de 04/01 e custo e "
+                  "desfechos por volta de 08/03.")
+    s.text(24, 36, "Lembrete: os números já aparecem, mas cada leitura só vale quando amadurece", size=18, fill=INK, weight=700)
+    s.text(24, 60, "As datas são estimativas de maturação da leitura e podem se mover com o ritmo de entrada no teste.",
+           size=13.5, fill=MUTED)
+    ini, fim = dt.date(2026, 10, 21), dt.date(2027, 3, 8)
+    x0, x1, y = 44, 1156, 152
+    X = lambda d: x0 + (d - ini).days / (fim - ini).days * (x1 - x0)
+    xp = X(dt.date(2027, 1, 4))
+    s.rect(x0, 98, xp - x0, 30, rx=15, fill=PINK, stroke=None)
+    s.text(x0 + 16, 118, "Acompanhamento: a diferença ainda pode mudar de lado", size=13, fill=BETERRABA, weight=600)
+    s.rect(xp, 98, x1 - xp, 30, rx=15, fill=NEUTRAL, stroke=None)
+    s.text(xp + 16, 118, "Custo e desfechos seguem amadurecendo", size=13, fill=MUTED, weight=600)
+    s.line(x0, y, x1, y, stroke=STROKE, sw=3)
+    marcos = [
+        (dt.date(2026, 10, 21), "21/10", "Início do teste", None, DARK, 7, "start"),
+        (dt.date(2026, 11, 6), "~06/11", "10 mil no tratamento", None, MAUVE, 6, "start"),
+        (dt.date(2026, 12, 7), "~07/12", "Primeira leitura", "uso nas semanas 2 a 4", MAGENTA, 8, "middle"),
+        (dt.date(2027, 1, 4), "~04/01", "Leitura principal", "decide o teste", MAGENTA, 11, "middle"),
+        (dt.date(2027, 3, 8), "~08/03", "Custo e desfechos", "CUt, PS e internação", BETERRABA, 8, "end"),
+    ]
+    for d, data, titulo, sub, cor, r, ancora in marcos:
+        x = X(d)
+        if cor == MAGENTA and r < 10:
+            s.circle(x, y, r, WHITE, stroke=MAGENTA, sw=3)
+        else:
+            s.circle(x, y, r, cor, stroke=WHITE if cor == MAUVE else None, sw=0)
+        tx = x - (r if ancora == "start" else -r if ancora == "end" else 0)
+        s.text(tx, y + 34, data, size=15, fill=cor if cor != MAUVE else MUTED, weight=700, anchor=ancora)
+        s.text(tx, y + 54, titulo, size=13.5, fill=INK, weight=600, anchor=ancora)
+        if sub:
+            s.text(tx, y + 72, sub, size=12.5, fill=MUTED, anchor=ancora)
+    s.save("linha-do-tempo-do-teste")
+
+
 if __name__ == "__main__":
     for f in (acesso_e_grupos, comparacao_de_custo, anatomia_do_canal, leitura_do_incremento,
-              cobertura_da_resolucao, da_conversa_a_consulta, substituicao_de_ps, arvore_do_teste):
+              cobertura_da_resolucao, da_conversa_a_consulta, substituicao_de_ps, arvore_do_teste, linha_do_tempo):
         f()
     print("ok:", sorted(p.name for p in OUT.glob("*.svg")))
