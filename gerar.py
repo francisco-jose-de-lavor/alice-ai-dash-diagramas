@@ -633,11 +633,11 @@ def linha_do_tempo():
 def linha_do_tempo_compacta():
     import datetime as dt
     W, H = 1000, 188
-    s = Svg(W, H, "Lembrete: os números já aparecem, mas cada leitura só vale quando amadurece. Datas estimadas: "
-                  "início em 21/10, primeira leitura por volta de 07/12, leitura principal por volta de 04/01 e custo "
-                  "e desfechos por volta de 08/03.")
+    s = Svg(W, H, "Lembrete: os números já aparecem, mas cada leitura só vale quando amadurece. Datas de leitura "
+                  "dos sorteados de 21/10 a 08/11: início em 21/10, primeira leitura em 07/12, leitura principal em "
+                  "04/01 e custo e desfechos em 08/03.")
     s.text(8, 30, "Lembrete: os números já aparecem, mas cada leitura só vale quando amadurece", size=21, fill=INK, weight=700)
-    s.text(8, 58, "Datas estimadas de maturação da leitura", size=16, fill=MUTED)
+    s.text(8, 58, "Datas de leitura dos sorteados de 21/10 a 08/11", size=16, fill=MUTED)
     ini, fim = dt.date(2026, 10, 21), dt.date(2027, 3, 8)
     x0, x1, y = 22, 978, 104
     X = lambda d: x0 + (d - ini).days / (fim - ini).days * (x1 - x0)
@@ -646,9 +646,9 @@ def linha_do_tempo_compacta():
     s.line(xp, y, x1, y, stroke="#DDDDD5", sw=5)
     marcos = [
         (dt.date(2026, 10, 21), "21/10", "Início", DARK, 8, "start"),
-        (dt.date(2026, 12, 7), "~07/12", "Primeira leitura", MAGENTA, 8, "middle"),
-        (dt.date(2027, 1, 4), "~04/01", "Leitura principal", MAGENTA, 12, "middle"),
-        (dt.date(2027, 3, 8), "~08/03", "Custo e desfechos", BETERRABA, 8, "end"),
+        (dt.date(2026, 12, 7), "07/12", "Primeira leitura", MAGENTA, 8, "middle"),
+        (dt.date(2027, 1, 4), "04/01", "Leitura principal", MAGENTA, 12, "middle"),
+        (dt.date(2027, 3, 8), "08/03", "Custo e desfechos", BETERRABA, 8, "end"),
     ]
     for d, data, titulo, cor, r, ancora in marcos:
         x = X(d)
